@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Sale extends Model
+{
+    protected $table = 'sales';
+    protected $fillable = [
+        'client_id',
+        'count',
+        'sum',
+        'discount_sum',
+        'payed_sum',
+        'debt_sum'
+    ];
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class, 'client_id');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(SaleItem::class, 'sale_id');
+    }
+}
