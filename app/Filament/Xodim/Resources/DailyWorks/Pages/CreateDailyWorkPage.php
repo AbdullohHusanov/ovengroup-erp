@@ -269,8 +269,8 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
 
                 // Agar stamper kerak bo'lmasa — to'g'ridan completed ga o'tadi
                 if (!$product->is_stamped) {
-                    $product->decrement('cleaned_product_count', $count);
-                    $product->increment('total_complated_product_count', $count);
+//                    $product->decrement('cleaned_product_count', $count);
+//                    $product->increment('total_complated_product_count', $count);
                 }
             })(),
 
