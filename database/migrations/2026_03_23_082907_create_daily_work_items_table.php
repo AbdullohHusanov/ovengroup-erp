@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('daily_work_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('daily_work_id')->constrained('daily_works');
-            $table->foreignId('product_id')->constrained();
+            $table->foreignId('product_id')->constrained()->onDelete('set null');
             $table->integer('count')->default(0);
             $table->timestamps();
         });
