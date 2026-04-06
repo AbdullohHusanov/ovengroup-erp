@@ -26,6 +26,12 @@ class DailyWorkResource extends Resource
     protected static ?string $navigationLabel = 'Kunlik hisoblar';
     protected static ?string $pluralLabel = 'Kunlik hisoblar';
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $user_id = auth()->id();
+        return parent::getEloquentQuery()->where('user_id', '=', $user_id);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return DailyWorkForm::configure($schema);

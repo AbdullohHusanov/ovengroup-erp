@@ -23,6 +23,10 @@ class EmployeesTable
                 TextColumn::make('phone')
                     ->label('Telefon')
                     ->searchable(),
+                TextColumn::make('currentSalary.sum')
+                    ->numeric()
+                    ->suffix(' UZS')
+                    ->label('Oylik to\'lov'),
                 TextColumn::make('role')
                     ->label('Lavozimi')
                     ->badge()
