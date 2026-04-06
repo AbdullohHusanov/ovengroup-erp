@@ -195,6 +195,16 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
                 ->pluck('model_name', 'id')
                 ->toArray(),
 
+            'warehousekeeper' => Product::where(function ($query) {
+                    $query->where('is_stamped', true)
+                        ->where('stamped_product_count', '>', 0);
+                })
+                ->orWhere(function ($query) {
+                    $query->where('is_stamped', false)
+                        ->where('cleaned_product_count', '>', 0);
+                })
+                ->pluck('model_name', 'id')
+                ->toArray(),
             default => [],
         };
     }
@@ -211,6 +221,7 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
             'inspector' => $product->welded_product_count,
             'cleaner'   => $product->checked_product_count,
             'stamper'   => $product->cleaned_product_count,
+            'warehousekeeper'   => $product->stamped_product_count,
             default     => 0,
         };
     }
@@ -225,6 +236,7 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
             'inspector' => (float) $product->inspector_price,
             'cleaner'   => (float) $product->cleaner_price,
             'stamper'   => (float) $product->stamper_price,
+            'warehousekeeper'   => 0,//(float) $product->stamper_price,
             default     => 0,
         };
     }
@@ -265,6 +277,14 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
             'stamper' => (function () use ($product, $count) {
                 $product->decrement('cleaned_product_count', $count);
                 $product->increment('stamped_product_count', $count);
+                // Stamper oxirgi bosqich — completed ga o'tadi
+//                $product->decrement('stamped_product_count', $count);
+//                $product->increment('total_complated_product_count', $count);
+            })(),
+
+            'warehousekeeper' => (function () use ($product, $count) {
+//                $product->decrement('cleaned_product_count', $count);
+//                $product->increment('stamped_product_count', $count);
                 // Stamper oxirgi bosqich — completed ga o'tadi
                 $product->decrement('stamped_product_count', $count);
                 $product->increment('total_complated_product_count', $count);
