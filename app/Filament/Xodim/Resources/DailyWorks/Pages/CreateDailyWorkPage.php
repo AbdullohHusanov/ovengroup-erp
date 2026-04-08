@@ -221,7 +221,7 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
             'inspector' => $product->welded_product_count,
             'cleaner'   => $product->checked_product_count,
             'stamper'   => $product->cleaned_product_count,
-            'warehousekeeper'   => $product->stamped_product_count,
+            'warehousekeeper'   => $product->is_stamped ? $product->stamped_product_count : $product->cleaned_product_count,
             default     => 0,
         };
     }
@@ -283,11 +283,14 @@ class CreateDailyWorkPage extends /*CreateRecord*/Page implements Forms\Contract
             })(),
 
             'warehousekeeper' => (function () use ($product, $count) {
-//                $product->decrement('cleaned_product_count', $count);
-//                $product->increment('stamped_product_count', $count);
-                // Stamper oxirgi bosqich — completed ga o'tadi
-                $product->decrement('stamped_product_count', $count);
-                $product->increment('total_complated_product_count', $count);
+                if (!$product->is_stamped) {
+                    $product->decrement('cleaned_product_count', $count);
+                    $product->increment('total_complated_product_count', $count);
+                } else {
+                    // Stamper oxirgi bosqich — completed ga o'tadi
+                    $product->decrement('stamped_product_count', $count);
+                    $product->increment('total_complated_product_count', $count);
+                }
             })(),
 
             default => null,
